@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\RoleService;
+use App\Services\BankService;
 use Illuminate\Http\Request;
 use App\Services\ResponseService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
-class RoleController extends Controller
+class BankController extends Controller
 {
-    protected $roleService;
+    protected $profileService;
     protected $responseService;
 
-    public function __construct(RoleService $roleService, ResponseService $responseService)
+    public function __construct(BankService $bankService, ResponseService $responseService)
     {
-        $this->roleService = $roleService;
+        $this->bankService = $bankService;
         $this->responseService = $responseService;
     }
 
@@ -26,7 +26,7 @@ class RoleController extends Controller
     public function index()
     {
         try{
-            return $this->responseService->success($this->roleService->allRoles(),"Roles retrieved successfully", 200);
+            return $this->responseService->success($this->bankService->allBanks(),"Profile retrieved successfully", 200);
         }catch (Exception $ex) {
             return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
         }
@@ -41,7 +41,9 @@ class RoleController extends Controller
         try{
 
             $validator = Validator::make($request->all(), [
-                'role_name' => 'required|string',
+                'bank_name' => 'required|string',
+                'account_no' => 'required|string',
+                'account_type' => 'required|string',
 
             ]);
 
@@ -51,9 +53,9 @@ class RoleController extends Controller
 
             $validatedData = $validator->validated();
 
-            //$validatedData['user_id'] = Auth::user()->id;
+            $validatedData['user_id'] = Auth::user()->id;
 
-            return $this->responseService->success($this->roleService->createRole($validatedData),"Role Info created successfully", 200);
+            return $this->responseService->success($this->bankService->createBank($validatedData,$validatedData['user_id']),"Bank Info created successfully", 200);
         }catch (ValidationException $ex) {
 
             return $this->responseService->error($ex->getMessage(), 422);
@@ -70,11 +72,11 @@ class RoleController extends Controller
     public function show(string $id)
     {
         try {
-            $Role = $this->roleService->getRoleById($id);
-            If($Role == null){
-                return $this->responseService->error("Role with ".$id." not found", 404,'Role_NOT_FOUND');
+            $bank = $this->bankService->getBankById($id);
+            If($bank == null){
+                return $this->responseService->error("Bank with ".$id." not found", 404,'BANK_NOT_FOUND');
             }
-            return $this->responseService->success(  $Role,"Role with ".$id."retrieved successfully", 200);
+            return $this->responseService->success(  $bank,"Bank with ".$id."retrieved successfully", 200);
         }catch (Exception $ex) {
             return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
         } catch (\Exception $ex) {
@@ -89,7 +91,10 @@ class RoleController extends Controller
     {
         try{
             $validator = Validator::make($request->all(), [
-                'role_name' => 'required|string',
+                'bank_name' => 'required|string',
+                'account_no' => 'required|string',
+                'account_type' => 'required|string',
+
             ]);
 
 
@@ -97,11 +102,11 @@ class RoleController extends Controller
                 throw new ValidationException($validator);
             }
             $validatedData = $validator->validated();
-            $profile = $this->roleService->updateRole($validatedData,$id);
+            $profile = $this-> bankService->updateBank($validatedData,$id);
             If($profile == null){
-                return $this->responseService->error("Role with ".$id." not found.Profile Could not be updated", 404,'PROFILE_TO_UPDATE_NOT_FOUND');
+                return $this->responseService->error("Bank with ".$id." not found.Profile Could not be updated", 404,'PROFILE_TO_UPDATE_NOT_FOUND');
             }
-            return $this->responseService->success( $profile,"Role updated successfully", 200);
+            return $this->responseService->success( $profile,"Bank updated successfully", 200);
         }catch (ValidationException $ex) {
 
             return $this->responseService->error($ex->getMessage(), 422);
@@ -116,7 +121,7 @@ class RoleController extends Controller
     public function destroy(string $id)
     {
         try {
-            return $this->responseService->success($this->roleService->delete($id),"Role with ".$id." deleted successfully", 200);
+            return $this->responseService->success($this->bankService->delete($id),"Bank with ".$id." deleted successfully", 200);
         } catch (\Exception $ex) {
             return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
         }

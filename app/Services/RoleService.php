@@ -10,10 +10,12 @@ namespace App\Services;
 
 
 use App\Models\Role;
+use App\Models\User;
 
 class RoleService
 {
-    public function createRole($data){
+    public function createRole($data ){
+
         $createdRole = Role::create($data);
         if(!$createdRole){
             return new Exception('Error creating not create New Role');
@@ -23,7 +25,7 @@ class RoleService
 
     public function updateRole($data ,$id){
         $roleToUpdate =  $this->getRoleById($id);
-        $updateRole = $roleToUpdate->merge($data);
+        $updateRole = $roleToUpdate->fill($data);
         $updateRole->save();
         If(!$updateRole){
             return new Exception('Role could not be updated');
@@ -32,20 +34,17 @@ class RoleService
         return $updateRole;
 
     }
-    public function allRole(){
-        $roles = Role::all();
-        if($roles->count() >= 1){
-            return $roles;
-        }
-        return null;
+    public function allRoles(){
+      return  $roles = Role::all();
+
     }
 
     public function getRoleById($id){
-        $roleToUpdate = Role::findOrFail($id);
-        if(!$roleToUpdate){
-            return new Exception('Role with id '. $id .' not found');
+        $roleToUpdate = Role::find($id);
+        if( $roleToUpdate){
+            return  $roleToUpdate;
         }
-        return $roleToUpdate;
+        return null;
     }
 
     public function delete($id){

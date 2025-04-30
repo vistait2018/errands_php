@@ -2,11 +2,16 @@
 namespace App\Services;
 
 use App\Models\Profile;
+use App\Models\User;
 use Exception;
 
 class ProfileService {
-    public function createProfile($data)
+    public function createProfile($data,$id)
     {
+      $user =  User::find($id);
+      if(!$user){
+          throw new Exception('Error creating new profile');
+      }
         $createdProfile = Profile::firstOrCreate($data);
             if (!$createdProfile) {
             throw new Exception('Error creating new profile');

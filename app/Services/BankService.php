@@ -10,40 +10,45 @@ namespace App\Services;
 
 
 use App\Models\Bank;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
 
 class BankService
 {
-    public function createBank($data){
+    public function createBank($data,$user_id){
+        $user =  User::find($user_id);
+        if(!$user){
+            throw new Exception('Error creating new bank infon');
+        }
         $createdBank = Bank::create($data);
         if(!$createdBank){
-            return new Exception('Error creating not create New Bank');
+            throw new Exception('Error creating not create New Bank');
         }
         return $createdBank;
     }
 
     public function updateBank($data ,$id){
         $bankToUpdate =  $this->getBankById($id);
-        $updateBank = $bankToUpdate->merge($data);
+        $updateBank = $bankToUpdate->fill($data);
         $updateBank->save();
         If(!$updateBank){
-            return new Exception('Bank could not be updated');
+            throw new Exception('Bank could not be updated');
         }
 
         return $updateBank;
 
     }
-    public function allBank(){
-        $banks = Bank::all();
-        if($banks->count() >= 1){
-            return $banks;
-        }
-        return null;
+    public function allBanks(){
+      return  $banks = Bank::all();
+
     }
 
     public function getBankById($id){
         $bankToUpdate = Bank::findOrFail($id);
         if(!$bankToUpdate){
-            return new Exception('Bank with id '. $id .' not found');
+            throw new Exception('Bank with id '. $id .' not found');
         }
         return $bankToUpdate;
     }

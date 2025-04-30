@@ -107,9 +107,9 @@ class ProfileController extends Controller
             $validatedData = $validator->validated();
             $profile = $this->profileService->updateProfile($validatedData,$id);
             If($profile == null){
-                return $this->responseService->error("Profile with ".$id." not found.Profile Could not be updated", 404,'PROFILE_TO_UPDATE_NOT_FOUND');
+                return $this->responseService->error("Profile with ".$id." not found", 404,'PROFILE_NOT_FOUND');
             }
-            return $this->responseService->success( $profile,"Profile updated successfully", 200);
+            return $this->responseService->success($profile,"Profile updated successfully", 200);
         }catch (ValidationException $ex) {
 
             return $this->responseService->error($ex->getMessage(), 422);

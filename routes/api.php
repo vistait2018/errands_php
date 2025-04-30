@@ -22,5 +22,7 @@ Route::prefix('v1')->group(function () {
         Route::get('users',[\App\Http\Controllers\UserController::class, 'index'])->name('users');
         Route::get('me',[\App\Http\Controllers\UserController::class, 'me'])->name('me');
         Route::apiResource('profiles', \App\Http\Controllers\ProfileController::class);
+        Route::apiResource('banks', \App\Http\Controllers\BankController::class);
+        Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
     });
 });
