@@ -59,8 +59,6 @@ class BankController extends Controller
         }catch (ValidationException $ex) {
 
             return $this->responseService->error($ex->getMessage(), 422);
-        } catch (Exception $ex) {
-            return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
         }catch (\Exception $ex) {
             return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
         }
@@ -77,8 +75,6 @@ class BankController extends Controller
                 return $this->responseService->error("Bank with ".$id." not found", 404,'BANK_NOT_FOUND');
             }
             return $this->responseService->success(  $bank,"Bank with ".$id."retrieved successfully", 200);
-        }catch (Exception $ex) {
-            return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
         } catch (\Exception $ex) {
             return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
         }

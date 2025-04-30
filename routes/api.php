@@ -24,5 +24,9 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('profiles', \App\Http\Controllers\ProfileController::class);
         Route::apiResource('banks', \App\Http\Controllers\BankController::class);
         Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
+        Route::post('verify-nin',[\App\Http\Controllers\BvnAndNinController::class,'verifyNIN']);
+        Route::post('verify-bvn',[\App\Http\Controllers\BvnAndNinController::class,'verifyBvn']);
+        Route::post('verify-bvn/save',[\App\Http\Controllers\BvnAndNinController::class,'validateAndCreateBVN']);
+        Route::post('verify-nin/save',[\App\Http\Controllers\BvnAndNinController::class,'validateAndCreateNIN']);
     });
 });

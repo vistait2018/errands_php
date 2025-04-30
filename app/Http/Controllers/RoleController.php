@@ -57,9 +57,7 @@ class RoleController extends Controller
         }catch (ValidationException $ex) {
 
             return $this->responseService->error($ex->getMessage(), 422);
-        } catch (Exception $ex) {
-            return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
-        }catch (\Exception $ex) {
+        } catch (\Exception $ex) {
             return $this->responseService->error('Internal Server Error: ' . $ex->getMessage(), 500);
         }
     }
